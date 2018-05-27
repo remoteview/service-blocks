@@ -35,21 +35,30 @@ func main() {
 func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewEncoder(w).Encode(block.HealthCheck{Status: "Ok"})
 	if err != nil {
-
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func listBlocksHandler(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(blocks)
+	err := json.NewEncoder(w).Encode(blocks)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func listBlockHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	for _, item := range blocks {
 		if item.ID == params["id"] {
-			json.NewEncoder(w).Encode(item)
+			err := json.NewEncoder(w).Encode(item)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
 			return
 		}
 	}
-	json.NewEncoder(w).Encode(&block.Block{})
+	err := json.NewEncoder(w).Encode(&block.Block{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
