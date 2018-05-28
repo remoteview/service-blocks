@@ -1,64 +1,68 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	block "github.com/remoteview/service-blocks/blocks"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/remoteview/service-blocks/blocks"
+	"github.com/remoteview/service-blocks/version"
 )
 
-var blocks []block.Block
+var dbBlocks []blocks.Block
+
+// HealthCheck - status
+type HealthCheck struct {
+	Version string `json:"version"`
+	Status  string `json:"status"`
+}
 
 func main() {
-	blocks = append(blocks, block.Block{ID: "1", StartTime: block.JSONTime(time.Date(0, 0, 0, 9, 0, 0, 0, time.UTC)), EndTime: block.JSONTime(time.Date(0, 0, 0, 17, 0, 0, 0, time.UTC)), Timezone: "UTC", UserID: "1"})
-	blocks = append(blocks, block.Block{ID: "2", StartTime: block.JSONTime(time.Date(0, 0, 0, 9, 0, 0, 0, time.UTC)), EndTime: block.JSONTime(time.Date(0, 0, 0, 17, 0, 0, 0, time.UTC)), Timezone: "UTC", UserID: "2"})
-	blocks = append(blocks, block.Block{ID: "3", StartTime: block.JSONTime(time.Date(0, 0, 0, 9, 0, 0, 0, time.UTC)), EndTime: block.JSONTime(time.Date(0, 0, 0, 17, 0, 0, 0, time.UTC)), Timezone: "UTC", UserID: "3"})
+	dbBlocks = append(dbBlocks, blocks.Block{ID: "1", StartTime: blocks.JSONTime(time.Date(0, 0, 0, 9, 0, 0, 0, time.UTC)), EndTime: blocks.JSONTime(time.Date(0, 0, 0, 17, 0, 0, 0, time.UTC)), Timezone: "UTC", UserID: "1"})
+	dbBlocks = append(dbBlocks, blocks.Block{ID: "2", StartTime: blocks.JSONTime(time.Date(0, 0, 0, 9, 0, 0, 0, time.UTC)), EndTime: blocks.JSONTime(time.Date(0, 0, 0, 17, 0, 0, 0, time.UTC)), Timezone: "UTC", UserID: "2"})
+	dbBlocks = append(dbBlocks, blocks.Block{ID: "3", StartTime: blocks.JSONTime(time.Date(0, 0, 0, 9, 0, 0, 0, time.UTC)), EndTime: blocks.JSONTime(time.Date(0, 0, 0, 17, 0, 0, 0, time.UTC)), Timezone: "UTC", UserID: "3"})
 
-	router := mux.NewRouter()
-	router.HandleFunc("/_health", healthCheckHandler).Methods("GET")
-	router.HandleFunc("/blocks", listBlocksHandler).Methods("GET")
-	router.HandleFunc("/blocks/{id}", listBlockHandler).Methods("GET")
+	r := gin.Default()
+	r.GET("/_health", healthCheckHandler)
+	r.GET("/blocks", listBlocksHandler)
+	r.GET("/blocks/:id", listBlockHandler)
 
-	headersOk := handlers.AllowedHeaders([]string{"Authorization"})
-	originsOk := handlers.AllowedOrigins([]string{"*"})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
+	r.Use(cors.New(cors.Config{
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"Origin"},
+		AllowAllOrigins:  true,
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	fmt.Println("Running server!")
-	log.Fatal(http.ListenAndServe(":3001", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
-}
-
-func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	err := json.NewEncoder(w).Encode(block.HealthCheck{Status: "Ok"})
+	err := r.Run(":3001")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println("Error starting server")
 	}
 }
 
-func listBlocksHandler(w http.ResponseWriter, r *http.Request) {
-	err := json.NewEncoder(w).Encode(blocks)
+func healthCheckHandler(c *gin.Context) {
+	version, err := version.GetVersion()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
+	c.JSON(200, HealthCheck{Status: "Ok", Version: version})
 }
 
-func listBlockHandler(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	for _, item := range blocks {
-		if item.ID == params["id"] {
-			err := json.NewEncoder(w).Encode(item)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
+func listBlocksHandler(c *gin.Context) {
+	c.JSON(200, dbBlocks)
+}
+
+func listBlockHandler(c *gin.Context) {
+	for _, item := range dbBlocks {
+		if item.ID == c.Param("id") {
+			c.JSON(http.StatusBadRequest, item)
 			return
 		}
-	}
-	err := json.NewEncoder(w).Encode(&block.Block{})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

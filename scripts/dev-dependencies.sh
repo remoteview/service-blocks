@@ -10,6 +10,9 @@ function main() {
 function passGoDevDependencies() {
   echo "Installing developer tools."
 
+  echo "gin https://github.com/codegangsta/gin"
+  go get -u github.com/codegangsta/gin
+
   echo "errcheck https://github.com/kisielk/errcheck"
   go get -u github.com/kisielk/errcheck
 

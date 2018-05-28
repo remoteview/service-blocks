@@ -27,8 +27,3 @@ func (t JSONTime) MarshalJSON() ([]byte, error) {
 	stamp := fmt.Sprintf("\"%s\"", time.Time(t).Format("15:04"))
 	return []byte(stamp), nil
 }
-
-// HealthCheck - status
-type HealthCheck struct {
-	Status string `json:"status"`
-}
