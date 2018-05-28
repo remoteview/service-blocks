@@ -3,5 +3,8 @@
   "port": 3001,
   "env": {
     "GIN_MODE": "release"
+  },
+  "healthCheck": {
+    "url": "localhost:3001/_health"
   }
 }
