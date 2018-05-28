@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Health check",
+        "description": "Get block",
         "title": "Blocks api",
         "contact": {
             "name": "Ivan Santos",
@@ -24,6 +24,30 @@
                     "application/json"
                 ],
                 "summary": "Health check"
+            }
+        },
+        "/blocks": {
+            "get": {
+                "description": "List blocks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List blocks"
+            }
+        },
+        "/blocks/{id}": {
+            "get": {
+                "description": "Get block",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get block"
             }
         }
     }

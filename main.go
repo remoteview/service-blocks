@@ -70,10 +70,20 @@ func healthCheckHandler(c *gin.Context) {
 	c.JSON(200, HealthCheck{Status: "Ok", Version: version})
 }
 
+// @Summary List blocks
+// @Description List blocks
+// @Accept  json
+// @Produce  json
+// @Router /blocks [get]
 func listBlocksHandler(c *gin.Context) {
 	c.JSON(200, dbBlocks)
 }
 
+// @Summary Get block
+// @Description Get block
+// @Accept  json
+// @Produce  json
+// @Router /blocks/{id} [get]
 func listBlockHandler(c *gin.Context) {
 	for _, item := range dbBlocks {
 		if item.ID == c.Param("id") {

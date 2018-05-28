@@ -5,7 +5,7 @@ info:
     email: pingme@ivansantos.me
     name: Ivan Santos
     url: https://ivansantos.me
-  description: Health check
+  description: Get block
   license: {}
   title: Blocks api
   version: "1.0"
@@ -18,4 +18,20 @@ paths:
       produces:
       - application/json
       summary: Health check
+  /blocks:
+    get:
+      consumes:
+      - application/json
+      description: List blocks
+      produces:
+      - application/json
+      summary: List blocks
+  /blocks/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get block
+      produces:
+      - application/json
+      summary: Get block
 swagger: "2.0"
