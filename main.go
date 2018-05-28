@@ -46,11 +46,7 @@ func main() {
 }
 
 func healthCheckHandler(c *gin.Context) {
-	version, err := version.GetVersion()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	version := version.GetVersion()
 	c.JSON(200, HealthCheck{Status: "Ok", Version: version})
 }
 

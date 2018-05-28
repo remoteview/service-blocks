@@ -1,0 +1,7 @@
+{
+  "id": "service-blocks",
+  "port": 3001,
+  "env": {
+    "GIN_MODE": "release"
+  }
+}

@@ -6,10 +6,10 @@ import (
 )
 
 // GetVersion -
-func GetVersion() (string, error) {
+func GetVersion() string {
 	v, err := ioutil.ReadFile("VERSION.txt")
 	if err != nil {
-		return "", err
+		return "unset"
 	}
-	return strings.TrimSuffix(string(v), "\n"), nil
+	return strings.TrimSuffix(string(v), "\n")
 }
