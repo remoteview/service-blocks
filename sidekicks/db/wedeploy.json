@@ -1,8 +1,8 @@
 {
   "id": "db",
-  "port": 5432,
   "image": "healthcheck/postgres:alpine",
-  "volume": {
-    "data": "/var/lib/postgresql/data"
-  }
+  "volumes": {
+    "pgdata": "/var/lib/postgresql/data"
+  },
+  "zeroDowntime": false
 }

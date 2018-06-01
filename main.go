@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -24,7 +25,11 @@ import (
 // @host localhost:3000
 // @BasePath /
 func main() {
-	db := common.Init()
+	goEnv := os.Getenv("GO_ENV")
+	if goEnv == "" {
+		goEnv = "development"
+	}
+	db := common.Init(goEnv)
 	defer func() {
 		err := db.Close()
 		if err != nil {

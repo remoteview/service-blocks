@@ -15,8 +15,8 @@ type Database struct {
 var DB *pop.Connection
 
 // Init - Opening a database and save the reference to `Database` struct.
-func Init() *pop.Connection {
-	db, err := pop.Connect("development")
+func Init(goEnv string) *pop.Connection {
+	db, err := pop.Connect(goEnv)
 	if err != nil {
 		fmt.Println("db err: ", err)
 	}
