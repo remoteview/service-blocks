@@ -37,9 +37,7 @@ func main() {
 		}
 	}()
 
-	r := gin.New()
-
-	r.Use(gin.Logger())
+	r := gin.Default()
 
 	r.GET("/_health", routes.HealthCheckHandler)
 	r.GET("/blocks", routes.ListBlocksHandler)
