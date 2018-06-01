@@ -21,9 +21,6 @@ type HealthCheck struct {
 	Status  string `json:"status"`
 }
 
-// func migrate(db *gorm.DB) {
-// 	db.AutoMigrate(&blocks.Block{})
-// }
 
 // @title Blocks api
 // @version 1.0
