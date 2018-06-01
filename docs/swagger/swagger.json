@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Get block",
+        "description": "Delete block",
         "title": "Blocks api",
         "contact": {
             "name": "Ivan Santos",
@@ -36,6 +36,16 @@
                     "application/json"
                 ],
                 "summary": "List blocks"
+            },
+            "post": {
+                "description": "List blocks",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create block"
             }
         },
         "/blocks/{id}": {
@@ -48,6 +58,16 @@
                     "application/json"
                 ],
                 "summary": "Get block"
+            },
+            "delete": {
+                "description": "Delete block",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete block"
             }
         }
     }

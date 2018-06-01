@@ -5,7 +5,7 @@ info:
     email: pingme@ivansantos.me
     name: Ivan Santos
     url: https://ivansantos.me
-  description: Get block
+  description: Delete block
   license: {}
   title: Blocks api
   version: "1.0"
@@ -26,7 +26,21 @@ paths:
       produces:
       - application/json
       summary: List blocks
+    post:
+      consumes:
+      - application/json
+      description: List blocks
+      produces:
+      - application/json
+      summary: Create block
   /blocks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete block
+      produces:
+      - application/json
+      summary: Delete block
     get:
       consumes:
       - application/json
