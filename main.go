@@ -21,7 +21,6 @@ type HealthCheck struct {
 	Status  string `json:"status"`
 }
 
-
 // @title Blocks api
 // @version 1.0
 // @description Blocks api endpoint
