@@ -81,7 +81,6 @@ func healthCheckHandler(c *gin.Context) {
 // @Produce  json
 // @Router /blocks [get]
 func listBlocksHandler(c *gin.Context) {
-	c.Header("Content-Type", "application/json; charset=utf-8")
 	db := common.GetDB()
 	var data []models.Block
 	err := db.All(&data)
@@ -92,8 +91,11 @@ func listBlocksHandler(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(200, data)
-
+	if len(data) > 0 {
+		c.JSON(200, data)
+	} else {
+		c.JSON(200, make([]string, 0))
+	}
 }
 
 // @Summary Get block
