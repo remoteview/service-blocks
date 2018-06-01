@@ -9,6 +9,5 @@ jobs:
       - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       - run: make dev-dependencies
       - run: dep ensure -vendor-only
-      - run: make test
       - run: make coverage.coveralls
 
