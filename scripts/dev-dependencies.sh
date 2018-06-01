@@ -21,6 +21,9 @@ function passGoDevDependencies() {
 
   echo "megacheck https://github.com/dominikh/go-tools/tree/master/cmd/megacheck"
   go get -u honnef.co/go/tools/cmd/megacheck
+
+  echo "swag github.com/swaggo/swag/cmd/swag"
+  go get -u github.com/swaggo/swag/cmd/swag
 }
 
 main
