@@ -10,4 +10,5 @@ jobs:
       - run: make dev-dependencies
       - run: dep ensure -vendor-only
       - run: make test
+      - run: make coverage.coveralls
 

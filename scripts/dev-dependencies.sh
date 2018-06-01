@@ -13,6 +13,9 @@ function passGoDevDependencies() {
   echo "gin https://github.com/codegangsta/gin"
   go get -u github.com/codegangsta/gin
 
+  echo "goveralls https://github.com/mattn/goveralls"
+  go get -u github.com/mattn/goveralls
+
   echo "errcheck https://github.com/kisielk/errcheck"
   go get -u github.com/kisielk/errcheck
 

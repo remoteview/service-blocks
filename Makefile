@@ -10,6 +10,15 @@ list-packages:
 test:
 	./scripts/test.sh
 
+coverage:
+	./scripts/coverage.sh
+
+coverage.html:
+	./scripts/coverage.sh --html
+
+coverage.coveralls:
+	./scripts/coverage.sh --coveralls
+
 watch:
 	gin run main.go
 
@@ -19,4 +28,4 @@ db.create:
 db.migrate:
 	soda migrate up
 
-.PHONY: install watch test list-packages dev-dependencies
+.PHONY: install watch test list-packages dev-dependencies db.create db.migrate coverage
