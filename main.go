@@ -31,7 +31,12 @@ func main() {
 		goEnv = "development"
 	}
 	db := common.Init(goEnv)
-	common.DbMigrate(db)
+	if goEnv != "test" {
+		err := common.DbMigrate(db)
+		if err != nil {
+			fmt.Println("migration err: ", err)
+		}
+	}
 	defer func() {
 		err := db.Close()
 		if err != nil {
@@ -41,7 +46,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/_health", healthcheck.HealthCheckHandler)
+	r.GET("/_health", healthcheck.Handler)
 	r.GET("/blocks", block.ListBlocksHandler)
 	r.GET("/blocks/:id", block.GetBlockHandler)
 	r.POST("/blocks", block.CreateBlockHandler)

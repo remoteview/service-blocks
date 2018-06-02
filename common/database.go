@@ -25,6 +25,16 @@ func Init(goEnv string) *pop.Connection {
 	return DB
 }
 
+// TestDBInit creates a temporarily database for running testing cases
+func TestDBInit() *pop.Connection {
+	testDb, err := pop.Connect("test")
+	if err != nil {
+		fmt.Println("db err: ", err)
+	}
+	DB = testDb
+	return DB
+}
+
 // GetDB - Using this function to get a connection, you can create your connection pool here.
 func GetDB() *pop.Connection {
 	return DB

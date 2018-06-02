@@ -8,7 +8,7 @@ list-packages:
 	go list ./...
 
 test:
-	./scripts/test.sh
+	GO_ENV=test ./scripts/test.sh
 
 coverage:
 	./scripts/coverage.sh
