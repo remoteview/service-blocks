@@ -1,8 +1,7 @@
-package routes
+package healthcheck
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/remoteview/service-blocks/healthcheck"
 	"github.com/remoteview/service-blocks/version"
 )
 
@@ -14,5 +13,5 @@ import (
 // @Router /_health [get]
 func HealthCheckHandler(c *gin.Context) {
 	version := version.GetVersion()
-	c.JSON(200, healthcheck.HealthCheck{Status: "Ok", Version: version})
+	c.JSON(200, HealthCheck{Status: "Ok", Version: version})
 }

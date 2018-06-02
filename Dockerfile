@@ -9,7 +9,7 @@ RUN set -ex && \
   mv ./service-blocks /usr/bin/service-blocks
 
 # Temporarely using go in order to run migrations on shell.
-FROM golang:alpine
+FROM busybox
 COPY --from=builder /usr/bin/service-blocks /usr/local/bin/service-blocks
 
 WORKDIR /service-blocks

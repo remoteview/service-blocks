@@ -1,4 +1,4 @@
-package routes
+package block
 
 import (
 	"fmt"
@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/remoteview/service-blocks/common"
-	"github.com/remoteview/service-blocks/models"
 )
 
+// ListBlocksHandler -
 // @Summary List blocks
 // @Description List blocks
 // @Accept  json
@@ -16,7 +16,7 @@ import (
 // @Router /blocks [get]
 func ListBlocksHandler(c *gin.Context) {
 	db := common.GetDB()
-	var data []models.Block
+	var data []Block
 	err := db.All(&data)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -32,6 +32,7 @@ func ListBlocksHandler(c *gin.Context) {
 	}
 }
 
+// GetBlockHandler -
 // @Summary Get block
 // @Description Get block
 // @Accept  json
@@ -39,7 +40,7 @@ func ListBlocksHandler(c *gin.Context) {
 // @Router /blocks/{id} [get]
 func GetBlockHandler(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var block models.Block
+	var block Block
 	if err := common.GetDB().Find(&block, id); err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)
@@ -48,6 +49,7 @@ func GetBlockHandler(c *gin.Context) {
 	}
 }
 
+// CreateBlockHandler -
 // @Summary Create block
 // @Description List blocks
 // @Accept  json
@@ -57,7 +59,7 @@ func CreateBlockHandler(c *gin.Context) {
 	c.Header("Content-Type", "application/json; charset=utf-8")
 
 	var err error
-	var block models.Block
+	var block Block
 
 	if err = c.BindJSON(&block); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -76,6 +78,7 @@ func CreateBlockHandler(c *gin.Context) {
 	c.JSON(201, gin.H{"success": block})
 }
 
+// DeleteBlockHandler -
 // @Summary Delete block
 // @Description Delete block
 // @Accept  json
@@ -83,7 +86,7 @@ func CreateBlockHandler(c *gin.Context) {
 // @Router /blocks/{id} [delete]
 func DeleteBlockHandler(c *gin.Context) {
 	id := c.Params.ByName("id")
-	var block models.Block
+	var block Block
 	if err := common.GetDB().Find(&block, id); err != nil {
 		c.AbortWithStatus(404)
 		fmt.Println(err)

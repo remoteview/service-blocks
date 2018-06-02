@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gobuffalo/pop"
+	"github.com/pkg/errors"
 )
 
 // Database -
@@ -27,4 +28,13 @@ func Init(goEnv string) *pop.Connection {
 // GetDB - Using this function to get a connection, you can create your connection pool here.
 func GetDB() *pop.Connection {
 	return DB
+}
+
+// DbMigrate - Run migrations
+func DbMigrate(db *pop.Connection) error {
+	mig, err := pop.NewFileMigrator("./migrations", db)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return mig.Up()
 }
