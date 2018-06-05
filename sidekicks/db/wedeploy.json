@@ -1,5 +1,5 @@
 {
-  "id": "db",
+  "id": "service-blocks-db",
   "image": "healthcheck/postgres:alpine",
   "volumes": {
     "pgdata": "/var/lib/postgresql/data"
