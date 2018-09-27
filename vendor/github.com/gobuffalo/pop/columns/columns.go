@@ -32,7 +32,7 @@ func (c *Columns) Add(names ...string) []*Column {
 		ss := ""
 		//support for distinct xx, or distinct on (field) table.fields
 		if strings.HasSuffix(name, ",r") || strings.HasSuffix(name, ",w") {
-			xs = []string{name[0 : len(name)-2], name[len(name)-1 : len(name)]}
+			xs = []string{name[0 : len(name)-2], name[len(name)-1:]}
 		} else {
 			xs = []string{name}
 		}
@@ -53,7 +53,6 @@ func (c *Columns) Add(names ...string) []*Column {
 		}
 
 		col = c.Cols[xs[0]]
-		//fmt.Printf("column: %v, col: %v, xs: %v, ss: %v\n", xs[0], col, xs, ss)
 		if col == nil {
 			if ss == "" {
 				ss = xs[0]

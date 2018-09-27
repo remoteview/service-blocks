@@ -6,7 +6,7 @@ So what does Pop do exactly? Well, it wraps the absolutely amazing [https://gith
 
 Pop makes it easy to do CRUD operations, run migrations, and build/execute queries. Is Pop an ORM? I'll leave that up to you, the reader, to decide.
 
-Pop, by default, follows conventions that were influenced by the (ActiveRecord)[http://www.rubyonrails.org] Ruby gem. What does this mean?
+Pop, by default, follows conventions that were influenced by the [ActiveRecord](http://www.rubyonrails.org) Ruby gem. What does this mean?
 
 * Tables must have an "id" column and a corresponding "ID" field on the `struct` being used.
 * If there is a `timestamp` column named `created_at`, and a `CreatedAt time.Time` attribute on the `struct`, it will be set with the current time when the record is created.
@@ -224,7 +224,7 @@ Running this command will generate the following files:
 ./migrations/20160815134952_name_of_migration.down.fizz
 ```
 
-The generated files are `fizz` files. [Fizz](./fizz/README.md) lets you use a common DSL for generating migrations. This means the same `.fizz` file can be run against any of the supported dialects of Pop! Find out more about [Fizz](./fizz/README.md)
+The generated files are `fizz` files. [Fizz](https://github.com/gobuffalo/fizz/blob/master/README.md) lets you use a common DSL for generating migrations. This means the same `.fizz` file can be run against any of the supported dialects of Pop! Find out more about [Fizz](https://github.com/gobuffalo/fizz/blob/master/README.md)
 
 If you want to generate old fashion `.sql` files you can use the `-t` flag for that:
 
@@ -459,8 +459,10 @@ type Writer struct {
    ID     uuid.UUID   `db:"id"`
    Name   string      `db:"name"`
    BookID uuid.UUID   `db:"book_id"`
-   Book   Book        `belongs_to:"book"`
+   Book   Book        `belongs_to:"book" fk_id:"BookID" primary_id:"ID"`
 }
+
+type Writers []Writer
 ```
 
 ```go

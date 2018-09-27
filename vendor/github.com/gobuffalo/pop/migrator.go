@@ -9,10 +9,11 @@ import (
 	"text/tabwriter"
 	"time"
 
+	"github.com/gobuffalo/pop/logging"
 	"github.com/pkg/errors"
 )
 
-var mrx = regexp.MustCompile(`(\d+)_([^\.]+)(\.[a-z0-9]+)?\.(up|down)\.(sql|fizz)`)
+var mrx = regexp.MustCompile(`^(\d+)_([^\.]+)(\.[a-z0-9]+)?\.(up|down)\.(sql|fizz)$`)
 
 // NewMigrator returns a new "blank" migrator. It is recommended
 // to use something like MigrationBox or FileMigrator. A "blank"
@@ -36,6 +37,37 @@ type Migrator struct {
 	Connection *Connection
 	SchemaPath string
 	Migrations map[string]Migrations
+}
+
+// UpLogOnly insert pending "up" migrations logs only, without applying the patch.
+// It's used when loading the schema dump, instead of the migrations.
+func (m Migrator) UpLogOnly() error {
+	c := m.Connection
+	return m.exec(func() error {
+		mtn := c.MigrationTableName()
+		mfs := m.Migrations["up"]
+		sort.Sort(mfs)
+		return c.Transaction(func(tx *Connection) error {
+			for _, mi := range mfs {
+				if mi.DBType != "all" && mi.DBType != c.Dialect.Name() {
+					// Skip migration for non-matching dialect
+					continue
+				}
+				exists, err := c.Where("version = ?", mi.Version).Exists(mtn)
+				if err != nil {
+					return errors.Wrapf(err, "problem checking for migration version %s", mi.Version)
+				}
+				if exists {
+					continue
+				}
+				_, err = tx.Store.Exec(fmt.Sprintf("insert into %s (version) values ('%s')", mtn, mi.Version))
+				if err != nil {
+					return errors.Wrapf(err, "problem inserting migration version %s", mi.Version)
+				}
+			}
+			return nil
+		})
+	})
 }
 
 // Up runs pending "up" migrations and applies them to the database.
@@ -68,7 +100,7 @@ func (m Migrator) Up() error {
 			if err != nil {
 				return errors.WithStack(err)
 			}
-			fmt.Printf("> %s\n", mi.Name)
+			log(logging.Info, "> %s", mi.Name)
 		}
 		return nil
 	})
@@ -111,13 +143,13 @@ func (m Migrator) Down(step int) error {
 				return err
 			}
 
-			fmt.Printf("< %s\n", mi.Name)
+			log(logging.Info, "< %s", mi.Name)
 		}
 		return nil
 	})
 }
 
-// Reset the database by runing the down migrations followed by the up migrations.
+// Reset the database by running the down migrations followed by the up migrations.
 func (m Migrator) Reset() error {
 	err := m.Down(-1)
 	if err != nil {
@@ -208,10 +240,10 @@ func (m Migrator) exec(fn func() error) error {
 }
 
 func printTimer(timerStart time.Time) {
-	diff := time.Now().Sub(timerStart).Seconds()
+	diff := time.Since(timerStart).Seconds()
 	if diff > 60 {
-		fmt.Printf("\n%.4f minutes\n", diff/60)
+		log(logging.Info, "%.4f minutes", diff/60)
 	} else {
-		fmt.Printf("\n%.4f seconds\n", diff)
+		log(logging.Info, "%.4f seconds", diff)
 	}
 }

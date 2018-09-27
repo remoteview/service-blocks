@@ -2,12 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.11
     working_directory: /go/src/github.com/remoteview/service-blocks
     steps:
       - checkout
-      - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       - run: make dev-dependencies
-      - run: dep ensure -vendor-only
+      - run: go mod download
       - run: make coverage.coveralls
 

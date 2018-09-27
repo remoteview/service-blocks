@@ -28,6 +28,8 @@ type ConnectionDetails struct {
 	User string
 	// The password of the database user. Example: "password"
 	Password string
+	// The encoding to use to create the database and communicate with it.
+	Encoding string
 	// Instead of specifying each individual piece of the
 	// connection you can instead just specify the URL of the
 	// database. Example: "postgres://postgres:postgres@localhost:5432/pop_test?sslmode=disable"
@@ -92,6 +94,7 @@ func (cd *ConnectionDetails) Finalize() error {
 			cd.User = cfg.User
 			cd.Password = cfg.Passwd
 			cd.Database = cfg.DBName
+			cd.Encoding = defaults.String(cfg.Collation, "utf8_general_ci")
 			addr := strings.TrimSuffix(strings.TrimPrefix(cfg.Addr, "("), ")")
 			if cfg.Net == "unix" {
 				cd.Port = "socket"
@@ -119,9 +122,11 @@ func (cd *ConnectionDetails) Finalize() error {
 	return nil
 }
 
-// Parse is deprecated! Please use `ConnectionDetails.Finalize()` instead!
+// Parse cleans up the connection details by normalizing names,
+// filling in default values, etc...
+// Deprecated: use ConnectionDetails.Finalize() instead.
 func (cd *ConnectionDetails) Parse(port string) error {
-	fmt.Println("[POP] ConnectionDetails#Parse(port string) has been deprecated!")
+	fmt.Println("Warning: ConnectionDetails#Parse(port string) is deprecated, and will be removed in a future version. Please use ForStructWithAlias instead.")
 	return cd.Finalize()
 }
 
